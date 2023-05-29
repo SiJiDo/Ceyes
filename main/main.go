@@ -51,6 +51,7 @@ func main() {
 	var filename string
 	var fofaSearch string
 	var sortCount bool
+	var cloud bool
 	var fofaDomain string
 	var fofaDork []string
 	fofa_email, fofa_api := GetFofaAuth()
@@ -59,6 +60,7 @@ func main() {
 	flag.StringVar(&filename, "f", "", "domain text")
 	flag.StringVar(&fofaSearch, "s", "", "fofa search dork")
 	flag.BoolVar(&sortCount, "sc", false, "sort result by count, deafult ip sort")
+	flag.BoolVar(&cloud, "cloud", false, "check cloud")
 
 	flag.Parse()
 
@@ -99,9 +101,10 @@ func main() {
 	//strat search
 	final_result := make(map[string]int)
 	final_result_domain := make(map[string]string)
+	final_cloud_result := make(map[string]string)
 	for i := range fofaDork {
 		fmt.Println("[+]now fofa dork is: [ " + fofaDork[i] + " ]")
-		result := fofac(fofa_email, fofa_api, fofaDork[i])
+		result, cloud_result := fofac(fofa_email, fofa_api, fofaDork[i], cloud)
 		//sort result
 		r := make([]ip_count, 0)
 		if sortCount == false {
@@ -111,11 +114,11 @@ func main() {
 		}
 		for _, pair := range r {
 			if len(pair.Key) == 15 {
-				fmt.Printf("[+]ipc:%v   count: %v \n", pair.Key, pair.Val)
+				fmt.Printf("[+]ipc:%v   count: %v	%v \n", pair.Key, pair.Val, cloud_result[pair.Key])
 			} else if len(pair.Key) == 16 {
-				fmt.Printf("[+]ipc:%v  count: %v \n", pair.Key, pair.Val)
+				fmt.Printf("[+]ipc:%v  count: %v	%v \n", pair.Key, pair.Val, cloud_result[pair.Key])
 			} else {
-				fmt.Printf("[+]ipc:%v\t count: %v \n", pair.Key, pair.Val)
+				fmt.Printf("[+]ipc:%v\t count: %v	%v \n", pair.Key, pair.Val, cloud_result[pair.Key])
 			}
 		}
 		if filename == "" {
@@ -123,12 +126,21 @@ func main() {
 		} else {
 			for k, v := range result {
 				_, status := final_result[k]
+				if cloud_result[k] != "" {
+					final_cloud_result[k] = "[" + cloud_result[k] + "]\t"
+					if strings.Contains(final_cloud_result[k], "(maybe)") == false {
+						final_cloud_result[k] = final_cloud_result[k] + "\t"
+					}
+				} else {
+					final_cloud_result[k] = "\t\t\t"
+				}
 				if status == true {
 					final_result[k] = final_result[k] + result[k]
 					final_result_domain[k] = final_result_domain[k] + ", " + strings.Split(fofaDork[i], "host=")[1]
 				} else {
 					final_result[k] = v
 					final_result_domain[k] = strings.Split(fofaDork[i], "host=")[1]
+
 				}
 			}
 		}
@@ -146,11 +158,11 @@ func main() {
 		for _, pair := range r {
 			domain := final_result_domain[pair.Key]
 			if len(pair.Key) == 15 {
-				fmt.Printf("[+]ipc:%v   count: %v \t domain: %v\n", pair.Key, pair.Val, domain)
+				fmt.Printf("[+]ipc:%v   count: %v \t%v domain: %v\n", pair.Key, pair.Val, final_cloud_result[pair.Key], domain)
 			} else if len(pair.Key) == 16 {
-				fmt.Printf("[+]ipc:%v  count: %v \t domain: %v\n", pair.Key, pair.Val, domain)
+				fmt.Printf("[+]ipc:%v  count: %v \t%v domain: %v\n", pair.Key, pair.Val, final_cloud_result[pair.Key], domain)
 			} else {
-				fmt.Printf("[+]ipc:%v\t count: %v \t domain: %v\n", pair.Key, pair.Val, domain)
+				fmt.Printf("[+]ipc:%v\t count: %v \t%v domain: %v\n", pair.Key, pair.Val, final_cloud_result[pair.Key], domain)
 			}
 		}
 
