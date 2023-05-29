@@ -1,6 +1,38 @@
 # Ceyes
 一款基于fofa根据域名或fofa语法收集C段分布数量的工具。
 
+### 2023.5.29 更新
+
+添加-cloud参数，可识别该段是否为云服务器
+
+云服务器的fofa指纹目前整理如下，主要识别方式通过org和cloud_name 2个字段进行判别，命中cloud_name基本上确定是云了，如果命中org字段可能是云也有可能是云厂商自家的资产。
+```
+华为云 - Huawei Cloud Service data center [cloud_name="HuaWeiCloud"]
+
+阿里云 - Hangzhou Alibaba Advertising Co.,Ltd. & Alibaba US Technology Co., Ltd. [cloud_name="aliyun"]
+
+腾讯云 - Shenzhen Tencent Computer Systems Company Limited & Tencent Building, Kejizhongyi Avenue [cloud_name="tencent"]
+
+百度云 - Beijing Baidu Netcom Science and Technology Co., Ltd. [cloud_name="baidu"]
+
+亚马逊云 - AMAZON-02 & AMAZON-AES [cloud_name="Amazon"]
+
+google云 - GOOGLE-IT & GOOGLE [cloud_name="google"]
+
+azure云 - MICROSOFT-CORP-MSN-AS-BLOCK [cloud_name="azure"]
+
+Cloudflare - CLOUDFLARENET [cloud_name="Cloudflare"]
+```
+
+效果如下
+
+```
+main.exe -f 1.txt -sc -cloud
+```
+
+![5](img/5.png)
+
+
 ### 编译&运行
 ```
 git clone https://github.com/SiJiDo/Ceyes.git
@@ -20,6 +52,8 @@ Fofa_api: ""
 ```
 main.exe -h
 Usage of main.exe:
+  -cloud
+        check cloud
   -d string
         domain deafult use dork like (domain= xxx || host= xxx)
   -f string
