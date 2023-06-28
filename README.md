@@ -1,6 +1,9 @@
 # Ceyes
 一款基于fofa根据域名或fofa语法收集C段分布数量的工具。
 
+### 2023.6.28 更新
+修复了fofa近期对api中的cloud_name的field进行限制导致工具无法正常执行的bug。目前已删除了cloud_name的标签查询，主要通过org标签来判断是否为云服务器。实际上org标签判断的广度其实高于cloud_name标签
+
 ### 2023.5.29 更新
 1.修复了count计数去重存在问题的bug
 
