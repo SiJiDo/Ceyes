@@ -70,7 +70,7 @@ func fofac(fofa_email string, fofa_api string, fofa_dock string, cloud bool) (ma
 	cloud_result := make(map[string]string)
 	dorkbase64 := base64.StdEncoding.EncodeToString([]byte(fofa_dock))
 
-	url1 := "https://fofa.info/api/v1/search/all?fields=host,ip,port,as_organization,cloud_name&size=10000&email=" + url.QueryEscape(fofa_email) + "&key=" + url.QueryEscape(fofa_api) + "&qbase64=" + url.QueryEscape(dorkbase64)
+	url1 := "https://fofa.info/api/v1/search/all?fields=host,ip,port,as_organization&size=10000&email=" + url.QueryEscape(fofa_email) + "&key=" + url.QueryEscape(fofa_api) + "&qbase64=" + url.QueryEscape(dorkbase64)
 	req := HttpRequest.NewRequest()
 	req.SetCookies(map[string]string{
 		"auth_token": "123",
