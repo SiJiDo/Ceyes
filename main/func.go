@@ -37,27 +37,11 @@ func check_cloud(cloud bool, info string) string {
 	org_cloudlist["AzureCloud"] = " MICROSOFT-CORP-MSN-AS-BLOCK"
 	org_cloudlist["Cloudflare"] = "CLOUDFLARENET"
 
-	cloudname_cloudlist := make(map[string]string)
-	cloudname_cloudlist["HuaWeiCloud"] = "HuaWeiCloud"
-	cloudname_cloudlist["AliyunCloud"] = "aliyun"
-	cloudname_cloudlist["TencentCloud"] = "tencent"
-	cloudname_cloudlist["BaiduCloud"] = "baidu"
-	cloudname_cloudlist["AmazonCloud"] = "Amazon"
-	cloudname_cloudlist["GoogleCloud"] = "google"
-	cloudname_cloudlist["AzureCloud"] = "azure"
-	cloudname_cloudlist["Cloudflare"] = "Cloudflare"
-
 	tag := strings.Split(info, "+")
 	org := tag[1]
-	cloud_name := tag[2]
 	for k, v := range org_cloudlist {
 		if strings.Contains(v, org) {
 			result = k + "(maybe)"
-		}
-	}
-	for k, v := range cloudname_cloudlist {
-		if cloud_name == v {
-			result = k
 		}
 	}
 
@@ -92,9 +76,8 @@ func fofac(fofa_email string, fofa_api string, fofa_dock string, cloud bool) (ma
 		data := datalist[i]
 		ip := data.Array()[1].String()
 		org := data.Array()[3].String()
-		cloud_name := data.Array()[4].String()
 		if in(ip, list) == false {
-			list = append(list, ip+"+"+org+"+"+cloud_name)
+			list = append(list, ip+"+"+org)
 		}
 	}
 
